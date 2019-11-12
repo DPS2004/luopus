@@ -16,16 +16,14 @@ function love.load()
   a = require "ezanim"
   state = "title"
   titleframe = 0
-  jiggle = false
+  j = 1
   jiggletime = 0
   t = 0
   
   img={
     controller = loadjiggle("controller"),
-    ta1 = newimg("ta1.png"),
-    ta2 = newimg("ta2.png"),
-    ts1 = newimg("ts1.png"),
-    ts2 = newimg("ts2.png"),
+    ta = loadjiggle("ta"),
+    ts = loadjiggle("ts"),
     xbc = newimg("XBC.png"),
     kbc = newimg("KBC.png"),
   }
@@ -41,7 +39,11 @@ function love.update(dt)
   t = t + dt
   jiggletime = jiggletime + dt*60
   if jiggletime >=15 then
-    jiggle = not jiggle
+    if j == 1 then
+      j = 2
+    else
+      j = 1
+    end
     jiggletime = jiggletime - 15
   end
   if state == "title" then
@@ -58,11 +60,7 @@ function love.draw()
   push:apply("start")
   if state == "title" then
     if titleframe == 0 then
-      if jiggle then
-        drawimg(img.controller[1])
-      else
-        drawimg(img.controller[2])
-      end
+      drawimg(img.controller[j])
     end
     if titleframe == 1 then
       if love.joystick.getJoystickCount() > 0 then
@@ -73,17 +71,9 @@ function love.draw()
     end
     if titleframe == 2 then
       if love.joystick.getJoystickCount() > 0 then
-        if jiggle then
-          drawimg(img.ta1)
-        else
-          drawimg(img.ta2)
-        end
+        drawimg(img.ta[j])
       else
-        if jiggle then
-          drawimg(img.ts1)
-        else
-          drawimg(img.ts2)
-        end
+        drawimg(img.ts[j])
       end
     end
   end
