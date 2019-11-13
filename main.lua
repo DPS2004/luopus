@@ -16,6 +16,7 @@ function love.load()
   a = require "ezanim"
   state = "title"
   titleframe = 0
+  introframe = 0
   j = 1
   jiggletime = 0
   t = 0
@@ -28,6 +29,11 @@ function love.load()
     xbc = newimg("title/XBC.png"),
     kbc = newimg("title/KBC.png"),
     -- intro cutscene
+    i1 = loadjiggle("story/a"),
+    i2 = loadjiggle("story/b"),
+    i3 = loadjiggle("story/c"),
+    i4 = loadjiggle("story/d"),
+    i5 = loadjiggle("story/e")
   }
 end
 function loadjiggle(fn)
@@ -42,11 +48,11 @@ function love.update(dt)
   jiggletime = jiggletime + dt*60
   if jiggletime >=15 then
     if j == 1 then
-      j = 2
+      j = 2 
     else
       j = 1
     end
-    jiggletime = jiggletime - 15
+    jiggletime = jiggletime - math.floor(jiggletime / 15) * 15
   end
   if state == "title" then
     if titleframe == 0 and t > 5 then
@@ -57,6 +63,7 @@ function love.update(dt)
     end
     if titleframe == 2 and love.keyboard.isDown("space") then
       state = "intro"
+      t = 0
     end
   end
 end
@@ -80,6 +87,11 @@ function love.draw()
       else
         drawimg(img.ts[j])
       end
+    end
+  end
+  if state == "intro" then
+    if introframe == 0 then
+      drawimg(img.i1[j])
     end
   end
   push:apply("end")

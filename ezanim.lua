@@ -23,7 +23,7 @@ end
 function ezanim.animupdate(a)
   a.time = a.time + love.timer.getDelta()*60
   if a.time >= a.s then
-    a.time = a.time - a.s
+    a.time = a.time - math.floor(a.time / a.s) * a.s
     a.f = a.f + 1
   end
   if a.f >= a.frames + 1 then
