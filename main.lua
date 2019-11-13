@@ -21,11 +21,13 @@ function love.load()
   t = 0
   
   img={
-    controller = loadjiggle("controller"),
-    ta = loadjiggle("ta"),
-    ts = loadjiggle("ts"),
-    xbc = newimg("XBC.png"),
-    kbc = newimg("KBC.png"),
+    -- title screen
+    controller = loadjiggle("title/controller"),
+    ta = loadjiggle("title/ta"),
+    ts = loadjiggle("title/ts"),
+    xbc = newimg("title/XBC.png"),
+    kbc = newimg("title/KBC.png"),
+    -- intro cutscene
   }
 end
 function loadjiggle(fn)
@@ -52,6 +54,9 @@ function love.update(dt)
     end
     if titleframe == 1 and t > 13 then
       titleframe = 2
+    end
+    if titleframe == 2 and love.keyboard.isDown("space") then
+      state = "intro"
     end
   end
 end
