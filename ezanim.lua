@@ -1,6 +1,5 @@
 local ezanim = {}
 function ezanim.newanim(png,w,s,b)
-  
   local a = {}
   a.w = w
   a.f = 1
@@ -23,11 +22,13 @@ end
 function ezanim.animupdate(a)
   a.time = a.time + love.timer.getDelta()*60
   if a.time >= a.s then
-    a.time = a.time - math.floor(a.time / a.s) * a.s
-    a.f = a.f + 1
+    framesmissed = math.floor(a.time / a.s)
+    a.f = a.f + framesmissed
+    a.time = a.time - framesmissed * a.s
+    
   end
-  if a.f >= a.frames + 1 then
-    a.f = 1
+  while a.f >= a.frames + 1 do
+    a.f = a.f - a.frames
   end 
 end
 function ezanim.animdraw(a,x,y,r,sx,sy,ox,oy,kx,ky)

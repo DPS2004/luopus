@@ -1,4 +1,5 @@
 function love.load()
+  love.window.setTitle("The Very Silly Adventures of Duopus")
   -- setup push
   push = require "push"
   windowWidth, windowHeight = 800, 480
@@ -44,6 +45,7 @@ function love.resize(w, h)
   push:resize(w, h)
 end
 function love.update(dt)
+  
   t = t + dt
   jiggletime = jiggletime + dt*60
   if jiggletime >=15 then
@@ -66,10 +68,17 @@ function love.update(dt)
       t = 0
     end
   end
+  if state == "intro" then
+    if t > 3 and love.keyboard.isDown("space") then
+      introframe = introframe + 1
+      t = 0
+    end
+  end
 end
 
 function love.draw()
   push:apply("start")
+  
   if state == "title" then
     if titleframe == 0 then
       drawimg(img.controller[j])
@@ -93,6 +102,19 @@ function love.draw()
     if introframe == 0 then
       drawimg(img.i1[j])
     end
+    if introframe == 1 then
+      drawimg(img.i2[j])
+    end
+    if introframe == 2 then
+      drawimg(img.i3[j])
+    end
+    if introframe == 3 then
+      drawimg(img.i4[j])
+    end
+    if introframe == 4 then
+      drawimg(img.i5[j])
+    end
   end
+
   push:apply("end")
 end
