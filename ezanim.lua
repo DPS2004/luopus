@@ -28,15 +28,19 @@ function ezanim.newanim(temp)
 end
 function ezanim.animupdate(a)
   a.time = a.time + love.timer.getDelta()*60
-  if a.time >= a.temp.s then
-    framesmissed = math.floor(a.time / a.temp.s)
-    a.f = a.f + framesmissed
-    a.time = a.time - framesmissed * a.temp.s
-    
+  if a.temp.s ~= 0 then
+    if a.time >= a.temp.s then
+      framesmissed = math.floor(a.time / a.temp.s)
+      a.f = a.f + framesmissed
+      a.time = a.time - framesmissed * a.temp.s
+      
+    end
+    while a.f >= a.temp.frames + 1 do
+      a.f = a.f - a.temp.frames
+    end 
+  else
+    a.f = 1
   end
-  while a.f >= a.temp.frames + 1 do
-    a.f = a.f - a.temp.frames
-  end 
 end
 function ezanim.outlinedraw(a,x,y,t,c1,c2,r,sx,sy,ox,oy,kx,ky)
 
