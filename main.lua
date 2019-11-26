@@ -22,7 +22,7 @@ function love.load()
   j = 1
   jiggletime = 0
   t = 0
-  dp = {x=0,y=0,anim=2,flip=false}
+  dp = {x=0,y=0,anim=2,flip=false,hp=3,maxhp=3}
   temps ={
     duopus = {
       a.newtemplate("duopus.png",19,4),
@@ -32,7 +32,9 @@ function love.load()
     arnold = {
       a.newtemplate("arnold bob.png",32,3),
       a.newtemplate("expandingcube.png",32,2)
-    }
+    },
+    heart = a.newtemplate("heart.png",8,5),
+    eheart = a.newtemplate("emptyheart.png",8,5)
   }
 
   img={
@@ -53,13 +55,21 @@ function love.load()
       a.newanim(temps.duopus[1]),
       a.newanim(temps.duopus[2]),
       a.newanim(temps.duopus[3])
-    }
+    },
+    heart = a.newanim(temps.heart),
+    eheart = a.newanim(temps.eheart)
   }
 end
 function loadjiggle(fn)
   return {newimg(fn.."1.png"),newimg(fn.."2.png")}
   
 end
+function love.keypressed(key)
+  if key == "3" then
+    dp.hp = dp.hp - 1
+  end
+end
+
 function love.resize(w, h)
   push:resize(w, h)
 end
@@ -101,33 +111,43 @@ function love.update(dt)
   end
   if state == "game" then
     moving = false
-    if love.keyboard.isDown("d") then
-      dp.flip = false
-      dp.x = dp.x + 1
-      moving  = true
-    end
-    if love.keyboard.isDown("a") then
-      dp.flip = true
-      dp.x = dp.x - 1
-      moving = true
-    end
-    if love.keyboard.isDown("s") then
-      dp.y = dp.y + 1
-      moving = true
-    end
-    if love.keyboard.isDown("w") then
-      dp.y = dp.y - 1
-      moving = true
-    end
-    if moving then
-      dp.anim = 1
-      a.resetanim(img.duopus[2])
-      a.animupdate(img.duopus[1])
+    if dp.hp ~= 0 then
+      if love.keyboard.isDown("d") then
+        dp.flip = false
+        dp.x = dp.x + 1
+        moving  = true
+      end
+      if love.keyboard.isDown("a") then
+        dp.flip = true
+        dp.x = dp.x - 1
+        if not love.keyboard.isDown("d") then
+          moving = true
+        else
+          moving = false
+        end
+      end
+      if love.keyboard.isDown("s") then
+        dp.y = dp.y + 1
+        moving = true
+      end
+      if love.keyboard.isDown("w") then
+        dp.y = dp.y - 1
+        moving = true
+      end
+      if moving then
+        dp.anim = 1
+        a.resetanim(img.duopus[2])
+        a.animupdate(img.duopus[1])
+      else
+        dp.anim = 2
+        a.resetanim(img.duopus[1])
+        a.animupdate(img.duopus[2])
+      end
     else
-      dp.anim = 2
-      a.resetanim(img.duopus[1])
-      a.animupdate(img.duopus[2])
+      dp.anim = 3
     end
+    a.animupdate(img.heart)
+    a.animupdate(img.eheart)
   end
 end
 
@@ -175,6 +195,13 @@ function love.draw()
       a.animdraw(img.duopus[dp.anim],dp.x+19,dp.y,0,-1,1)
     else
       a.animdraw(img.duopus[dp.anim],dp.x,dp.y)
+    end
+    for i=0,dp.maxhp - 1 do
+      if i <= dp.hp-1 then
+        a.animdraw(img.heart,i*10+2,110)
+      else
+        a.animdraw(img.eheart,i*10+2,110)
+      end
     end
   end
   push:apply("end")
